@@ -6,7 +6,6 @@
 function shuffle(array)
 {
     // Créer une copie du tableau array pour ne pas perdre l'ordre du tableau d'origine après l'affichage en aléatoire
-    
     let arrayCopy = [];
     for (i = 0; i < array.length; i++) {
     arrayCopy[i] = array[i];
@@ -32,11 +31,12 @@ function toHTML(question)
         `<fieldset class="questions">
         <legend class="legend">${question.content}</legend>
         `;
+    let uniqId=Date.now()+Math.floor(Math.random()*1000);
     for(let indice=0; indice<answersCopy.length;indice++){
         html+=
             `<div class="answers">
-            <input type="radio" name="" id="answer"> 
-            <label for="answer">${answersCopy[indice]}</label>
+            <input type="radio" name="answer${uniqId}" class="answer" data="${answersCopy[indice].rightAnswer}"> 
+            <label for="answer">${answersCopy[indice].label}</label>
             </div>`;
     };
     html+=
@@ -45,6 +45,16 @@ function toHTML(question)
     const form=document.body.querySelector("#form");
     form.innerHTML+=html;
 };
+
+
+// Checker les réponses de l'utilisateur et les ranger dans un tableau de choix
+
+// function answerChecker(event)
+// {
+//     let choices=[];
+    
+// }
+
 
 
 // *****************************
@@ -58,32 +68,61 @@ function toHTML(question)
 let questions = [
     {
         content: "Pourquoi les chats miaulent-ils?",
-        answers: ["Pour attirer votre attention","Parce qu'ils sont bons chanteurs","Pour vous casser les oreilles"],
-        rightAnswer:0,
+        answers: [
+            {label:"Pour attirer votre attention",rightAnswer:"1"},
+            {label:"Parce qu'ils sont bons chanteurs",
+            rightAnswer:"0"},
+            {label:"Pour vous casser les oreilles",
+            rightAnswer:"0"}
+        ],
         comment: "Il donne sa langue au chat !"
     },
     {
         content: "Quelle est la couleur la plus commune des chats?",
-        answers: ["gris","tricolore","noir"],
-        rightAnswer:0,
+        answers: [
+            {label:"gris",
+            rightAnswer:"1"},
+            {label:"tricolore",
+            rightAnswer:"0"},
+            {label:"noir",
+            rightAnswer:"0"}
+        ],
         comment: "Dans la nuit tous les chats sont gris !"
     },
     {
         content: "Quelle est la vitesse maximale atteinte par un chat lorsqu'il court?",
-        answers: ["48 km/h","10 km/h","2 km/h"],
-        rightAnswer:0,
+        answers: [
+            {label:"48 km/h",
+            rightAnswer:"1"},
+            {label:"10 km/h",
+            rightAnswer:"0"},
+            {label:"2 km/h",
+            rightAnswer:"0"}
+        ],
         comment: "Parfait pour jouer au chat et à la souris !"
     },
     {
         content: "Ont-ils peur de l’eau ?",
-        answers: ["L'eau n'est pas sa meilleure amie","Cela dépend de sa couleur","Bien sûr, il vit même dans un aquarium"],
-        rightAnswer:0,
+        answers: [
+            {label:"L'eau n'est pas sa meilleure amie",
+            rightAnswer:"1"},
+            {label:"Cela dépend de sa couleur",
+            rightAnswer:"0"},
+            {label:"Bien sûr, il vit même dans un aquarium",
+            rightAnswer:"0"},
+        ],
         comment: "Chat échaudé craint l'eau froide !"
     },
     {
         content: "La plupart du temps, pourquoi mon chat vomit-il ?",
-        answers: ["A cause d'une boule de poils qui le gêne","Parce que sa maison est trop propre","Pour vous mettre au travail"],
-        rightAnswer:0,
+        answers: [
+            {label:"A cause d'une boule de poils qui le gêne",
+            rightAnswer:"1"},
+            {label:"Parce que sa maison est trop propre",
+            rightAnswer:"0"},
+            {label:"Pour vous mettre au travail",
+            rightAnswer:"0"},
+        ],
         comment: "Il avait sûrement un chat dans la gorge !"
     }
 ];
@@ -97,22 +136,13 @@ class Question{
     constructor(
         content,
         answers,
-        rightAnswer,
         comment)
         {
             this.content=content;
             this.answers=answers;
-            this.rightAnswer=rightAnswer;
             this.comment=comment;
         };   
 };
-
-
-// Des boutons radio à écouter
-const choice=document.querySelector('#answer');
-
-// Un bouton "submit"
-const submit=document.querySelector('#button');
 
 
 
@@ -121,18 +151,14 @@ const submit=document.querySelector('#button');
 // ********* CODE PRINCIPAL *********
 // **********************************
 
-// A faire:
+
+questions=questions.map(question => {
+    return new Question(question.content,question.answers,question.comment)
+});
+
 
 // Afficher les questions de manière aléatoire
 // Afficher les réponses de manière aléatoire
-// Placer un écouteur sur les boutons radio
-// Placer un écouteur sur le bouton "submit"
-
-
-questions=questions.map(question => {
-    return new Question(question.content,question.answers,question.rightAnswer,question.comment)
-});
-
 
 let questionsCopy=shuffle(questions);
 for(let i=0;i<questionsCopy.length;i++)
@@ -141,21 +167,15 @@ for(let i=0;i<questionsCopy.length;i++)
 };
 
 
-// let answersCopy=shuffle(question.answers);
+// Placer un écouteur sur le bouton "submit"
 
-
-// for(let i=0;i<answersCopy.length;i++)
-// {
-//     toHTML(answersCopy[i]);
-// };
-
-console.log(questions);
-console.log(questionsCopy);
+// const submit=document.querySelector('#button');
+// submit.addEventListener('click',answerChecker);
 
 
 
 
-
-
-
+// console.log(questions);
+// console.log(questionsCopy);
+// console.log(choices);
 
