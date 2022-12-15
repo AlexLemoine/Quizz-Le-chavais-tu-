@@ -2,7 +2,8 @@
 // ********* FONCTIONS *********
 // *****************************
 
-// Trier les réponses dans un ordre aléatoire
+// Trier les réponses dans un ordre aléatoire :
+
 function shuffle(array)
 {
     // Créer une copie du tableau array pour ne pas perdre l'ordre du tableau d'origine après l'affichage en aléatoire
@@ -22,7 +23,9 @@ function shuffle(array)
 };
 
 
-// Y appliquer la fonction shuffle, à la fois pour les questions et pour les réponses de chaque question
+// Y appliquer la fonction shuffle, à la fois pour les questions et pour les réponses de chaque question :
+// Créer des boutons radio devant chaque réponse :
+// Y construire le code HTML des questions+réponses :
 
 function toHTML(question)
 {   
@@ -47,13 +50,18 @@ function toHTML(question)
 };
 
 
-// Checker les réponses de l'utilisateur et les ranger dans un tableau de choix
 
-// function answerChecker(event)
+// Fonction answersGaver: Parcourir les réponses sélectionnées par l'utilisateur
+
+// Vérifier si l'élément actuel est sélectionné en utilisant l'attribut "checked"
+// if (element.classList.contains('.checked')==true)
+
+// Récupérer "answersCopy[indice].label" de l'élément sélectionné et le ranger dans un tableau "choices" (.push())
+
+// function answersGaver(event)
 // {
-//     let choices=[];
-    
-// }
+
+// };
 
 
 
@@ -63,7 +71,7 @@ function toHTML(question)
 
 // DE QUOI AI-JE BESOIN ?
 
-// Des questions + des réponses
+// Des questions + des réponses :
 
 let questions = [
     {
@@ -127,10 +135,7 @@ let questions = [
     }
 ];
 
-// Créer une classe
-// Créer des boutons radio devant chaque réponse
-// Y construire le code HTML des questions+réponses
-
+// Créer une classe :
 
 class Question{
     constructor(
@@ -169,13 +174,9 @@ for(let i=0;i<questionsCopy.length;i++)
 
 // Placer un écouteur sur le bouton "submit"
 
-// const submit=document.querySelector('#button');
-// submit.addEventListener('click',answerChecker);
+const submit=document.querySelector('#button');
+submit.addEventListener('click',answersGaver);
 
 
 
-
-// console.log(questions);
-// console.log(questionsCopy);
-// console.log(choices);
 
