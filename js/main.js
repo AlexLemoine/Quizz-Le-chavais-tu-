@@ -27,18 +27,18 @@ function shuffle(array)
 // Créer des boutons radio devant chaque réponse :
 // Y construire le code HTML des questions+réponses :
 
-function toHTML(question)
+function toHTML(question,indice)
 {   
     let answersCopy=shuffle(question.answers);
     let html =
-        `<fieldset class="questions">
+        `<fieldset class="questions" id="question-${indice}">
         <legend class="legend">${question.content}</legend>
         `;
     let uniqId=Date.now()+Math.floor(Math.random()*1000);
     for(let indice=0; indice<answersCopy.length;indice++){
         html+=
             `<div class="answers">
-            <input type="radio" name="answer${uniqId}" class="answer" data="${answersCopy[indice].rightAnswer}"> 
+            <input type="radio" name="answer${uniqId}" class="answer" data-rightAnswer="${answersCopy[indice].rightAnswer}"> 
             <label for="answer">${answersCopy[indice].label}</label>
             </div>`;
     };
@@ -51,17 +51,27 @@ function toHTML(question)
 
 
 
-// Fonction answersGaver: Parcourir les réponses sélectionnées par l'utilisateur
-
+// Fonction answersGaver: 
+// Seulement si une réponse sélectionnée pour chaque question:
+// Parcourir les réponses sélectionnées par l'utilisateur
 // Vérifier si l'élément actuel est sélectionné en utilisant l'attribut "checked"
-// if (element.classList.contains('.checked')==true)
+// Récupérer "label" de l'élément sélectionné et le ranger dans un tableau (.push())
 
-// Récupérer "answersCopy[indice].label" de l'élément sélectionné et le ranger dans un tableau "choices" (.push())
+function check(event)
+{
+    for(let i=0; i<questionsCopy.length;i++){
+        let answers=document.querySelector("#question-"+i+" input:checked");
+        console.log(answers);     
+    }; 
 
-// function answersGaver(event)
-// {
+    // Supprimer la classe "hidden" des comment pour les afficher    
+    let p=document.querySelectorAll('p.hidden');
+    for(let i=0;i<p.length;i++){
+        p[i].classList.remove("hidden");
+        console.log(p);
+    }
+};
 
-// };
 
 
 
@@ -168,14 +178,16 @@ questions=questions.map(question => {
 let questionsCopy=shuffle(questions);
 for(let i=0;i<questionsCopy.length;i++)
 {
-    toHTML(questionsCopy[i]);
+    toHTML(questionsCopy[i],i);
 };
 
 
 // Placer un écouteur sur le bouton "submit"
 
-const submit=document.querySelector('#button');
-submit.addEventListener('click',answersGaver);
+let submit=document.querySelector('#button');
+submit.addEventListener('click',check);
+
+
 
 
 
