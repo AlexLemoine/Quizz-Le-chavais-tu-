@@ -43,7 +43,7 @@ function toHTML(question,indice)
             </div>`;
     };
     html+=
-        `<p class="hidden">${question.comment}</p>
+        `<p class="hidden"><i class="fa-solid fa-cat"></i> ${question.comment}</p>
         </fieldset>`;
     const form=document.body.querySelector("#form");
     form.innerHTML+=html;
@@ -51,25 +51,46 @@ function toHTML(question,indice)
 
 
 
-// Fonction answersGaver: 
+// Fonction check: 
 // Seulement si une réponse sélectionnée pour chaque question:
-// Parcourir les réponses sélectionnées par l'utilisateur
-// Vérifier si l'élément actuel est sélectionné en utilisant l'attribut "checked"
 // Récupérer "label" de l'élément sélectionné et le ranger dans un tableau (.push())
+
 
 function check(event)
 {
-    for(let i=0; i<questionsCopy.length;i++){
-        let answers=document.querySelector("#question-"+i+" input:checked");
-        console.log(answers);     
+    
+    // Vérifier si l'élément actuel est sélectionné en utilisant l'attribut "checked"
+    // Parcourir les réponses sélectionnées par l'utilisateur
+    
+    for(let i=0;i<questionsCopy.length;i++){
+        let answerChecked=document.querySelector("#question-"+i+" input:checked");
+
+        // Si data-rightanswer=0 => ajout classe "wrong"
+
+        let falseAnswer=document.querySelector("#question-"+i+" input:checked + label");
+
+        if(answerChecked.dataset.rightanswer=="0"){
+            falseAnswer.classList.add('wrong');
+        };
+    };
+
+
+    // Checker chaque réponse qui a un attribut data-rightanswer=1 
+    // Ajouter au label qui suit la classe "right"
+
+    let rightAnswer=document.querySelectorAll('input[data-rightanswer="1"] + label');
+
+    for(let i=0;i<rightAnswer.length;i++){
+        rightAnswer[i].classList.add('right');
     }; 
+
 
     // Supprimer la classe "hidden" des comment pour les afficher    
     let p=document.querySelectorAll('p.hidden');
     for(let i=0;i<p.length;i++){
         p[i].classList.remove("hidden");
-        console.log(p);
-    }
+    };
+
 };
 
 

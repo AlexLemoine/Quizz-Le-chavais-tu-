@@ -1,3 +1,11 @@
-.hidden {
+p.hidden {
   visibility: hidden;
+}
+
+label.right {
+  color: green;
+}
+
+label.wrong {
+  color: red;
 }/*# sourceMappingURL=index.css.map */
