@@ -23,37 +23,12 @@ function shuffle(array)
 };
 
 
-// Y appliquer la fonction shuffle, à la fois pour les questions et pour les réponses de chaque question :
-// Créer des boutons radio devant chaque réponse :
-// Y construire le code HTML des questions+réponses :
 
-function toHTML(question,indice)
-{   
-    let answersCopy=shuffle(question.answers);
-    let html =
-        `<fieldset class="questions" id="question-${indice}">
-        <legend class="legend">${question.content}</legend>
-        `;
-    let uniqId=Date.now()+Math.floor(Math.random()*1000);
-    for(let indice=0; indice<answersCopy.length;indice++){
-        html+=
-            `<div class="answers">
-            <input type="radio" name="answer${uniqId}" class="answer" data-rightAnswer="${answersCopy[indice].rightAnswer}"> 
-            <label for="answer">${answersCopy[indice].label}</label>
-            </div>`;
-    };
-    html+=
-        `<p class="hidden"><i class="fa-solid fa-cat"></i> ${question.comment}</p>
-        </fieldset>`;
-    const form=document.body.querySelector("#form");
-    form.innerHTML+=html;
-};
 
 
 
 // Fonction check: 
-// Seulement si une réponse sélectionnée pour chaque question:
-// Récupérer "label" de l'élément sélectionné et le ranger dans un tableau (.push())
+// Récupérer "label" de l'élément sélectionné et le ranger dans un tableau
 
 
 function check(event)
@@ -107,6 +82,7 @@ function check(event)
 let questions = [
     {
         content: "Pourquoi les chats miaulent-ils?",
+        type: "radio",
         answers: [
             {label:"Pour attirer votre attention",rightAnswer:"1"},
             {label:"Parce qu'ils sont bons chanteurs",
@@ -117,19 +93,21 @@ let questions = [
         comment: "Il donne sa langue au chat !"
     },
     {
-        content: "Quelle est la couleur la plus commune des chats?",
+        content: "Quel chat retrouve-t-on le plus?",
+        type: "radioImg",
         answers: [
-            {label:"gris",
-            rightAnswer:"1"},
-            {label:"tricolore",
-            rightAnswer:"0"},
-            {label:"noir",
-            rightAnswer:"0"}
+            {label:"Le chat gris",
+            rightAnswer:"1",img:"grey-cat.jpg"},
+            {label:"Le chat tricolore",
+            rightAnswer:"0",img:"tricolor-cat.jpg"},
+            {label:"Le chat noir",
+            rightAnswer:"0",img:"black-cat.jpg"}
         ],
         comment: "Dans la nuit tous les chats sont gris !"
     },
     {
         content: "Quelle est la vitesse maximale atteinte par un chat lorsqu'il court?",
+        type: "radio",
         answers: [
             {label:"48 km/h",
             rightAnswer:"1"},
@@ -142,6 +120,7 @@ let questions = [
     },
     {
         content: "Ont-ils peur de l’eau ?",
+        type: "radio",
         answers: [
             {label:"L'eau n'est pas sa meilleure amie",
             rightAnswer:"1"},
@@ -154,6 +133,7 @@ let questions = [
     },
     {
         content: "La plupart du temps, pourquoi mon chat vomit-il ?",
+        type: "radio",
         answers: [
             {label:"A cause d'une boule de poils qui le gêne",
             rightAnswer:"1"},
@@ -166,20 +146,92 @@ let questions = [
     }
 ];
 
-// Créer une classe :
+// Créer une classe Question :
+// Créer le code HTML de chaque question
 
 class Question{
     constructor(
+        indice,
         content,
+        type,
         answers,
-        comment)
+        comment,)
         {
+            this.indice=indice;
             this.content=content;
+            this.type=type;
             this.answers=answers;
             this.comment=comment;
         };   
+
+    toHTML()
+    {   
+        
+        // Afficher les réponses de manière aléatoire
+        let answersCopy=shuffle(this.answers);
+        let html =
+            `<fieldset class="questions ${this.type}" id="question-${this.indice}">
+            <legend class="legend">${this.content}</legend>
+            `;
+
+        let uniqId=Date.now()+Math.floor(Math.random()*1000);
+
+        for(let indiceAnswers=0; indiceAnswers<answersCopy.length;indiceAnswers++){
+            if(this.type=="radio"){
+                html+=
+                    `<div class="answers">
+                        <input type="radio" name="answer${uniqId}" class="answer" data-rightAnswer="${answersCopy[indiceAnswers].rightAnswer}"> 
+                        <label for="answer">${answersCopy[indiceAnswers].label}</label>
+                    </div>`;
+            }else if(this.type=="radioImg"){
+                html+=
+                    `<div class="answers">
+                        <input type="radio" name="answer${uniqId}" class="answer" data-rightAnswer="${answersCopy[indiceAnswers].rightAnswer}"> 
+                        <label for="answer">
+                            <figure>
+                                <img src="img/${answersCopy[indiceAnswers].img}" alt="${answersCopy[indiceAnswers].label}">
+                                <figcaption>${answersCopy[indiceAnswers].label}</figcaption>
+                            </figure>
+                        </label>
+                    </div>`;
+            };
+        };
+        html+=
+            `<p class="hidden"><i class="fa-solid fa-cat"></i> ${this.comment}</p>
+            </fieldset>`;
+        return html;
+    }
+        
 };
 
+
+// Créer une classe Quizz
+// Afficher les questions une par une
+
+
+class Quizz{
+    constructor(
+        questions
+    )
+    {
+        this.questions=shuffle(questions);
+        for(let i=0;i<this.questions.length;i++){
+            this.questions[i]=new Question(i,this.questions[i].content,this.questions[i].type,this.questions[i].answers,this.questions[i].comment)
+        };
+
+        const form=document.querySelector("#form");
+        for(let i=0;i<this.questions.length;i++)
+        {
+            form.innerHTML+=this.questions[i].toHTML();
+        };
+
+
+        // Placer un écouteur sur le bouton "submit"
+
+        let submit=document.querySelector('#button');
+        submit.addEventListener('click',check);
+    }; 
+};
 
 
 
@@ -188,25 +240,8 @@ class Question{
 // **********************************
 
 
-questions=questions.map(question => {
-    return new Question(question.content,question.answers,question.comment)
-});
+const quizz=new Quizz(questions);
 
-
-// Afficher les questions de manière aléatoire
-// Afficher les réponses de manière aléatoire
-
-let questionsCopy=shuffle(questions);
-for(let i=0;i<questionsCopy.length;i++)
-{
-    toHTML(questionsCopy[i],i);
-};
-
-
-// Placer un écouteur sur le bouton "submit"
-
-let submit=document.querySelector('#button');
-submit.addEventListener('click',check);
 
 
 

@@ -1,11 +1,30 @@
-p.hidden {
+.hidden {
   visibility: hidden;
 }
 
 label.right {
   color: green;
+  font-weight: bold;
 }
 
 label.wrong {
   color: red;
+  font-weight: bold;
+}
+
+div.answers {
+  display: inline-block;
+}
+
+div.answers figure {
+  min-width: 220px;
+}
+
+div.answers img {
+  width: 30%;
+  padding: 5px;
+}
+
+fieldset.radioImg div.answers label {
+  padding: 10px;
 }/*# sourceMappingURL=index.css.map */
