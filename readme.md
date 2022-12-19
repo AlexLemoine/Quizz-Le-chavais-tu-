@@ -21,7 +21,7 @@ Modifications :
 => ajouter une classe aux questions: classe radio, classe checkbox, classe radioImg
 => lier des images pour quelques réponses
 => modifier classe Question (ajout fonction toHTML() dans la classe)
-=> ajouter classe Quizz: parcourir questionsCopy et récupérer le HTML de chaque question, affichage question par question
+=> ajouter classe Quizz: parcourir questionsCopy et récupérer le HTML de chaque question
 
 
 Reste à faire:
