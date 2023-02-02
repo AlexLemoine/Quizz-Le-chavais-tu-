@@ -37,7 +37,7 @@ function check(event)
     // Vérifier si l'élément actuel est sélectionné en utilisant l'attribut "checked"
     // Parcourir les réponses sélectionnées par l'utilisateur
     
-    for(let i=0;i<questionsCopy.length;i++){
+    for(let i=0;i<questions.length;i++){
         let answerChecked=document.querySelector("#question-"+i+" input:checked");
 
         // Si data-rightanswer=0 => ajout classe "wrong"
@@ -241,10 +241,4 @@ class Quizz{
 
 
 const quizz=new Quizz(questions);
-
-
-
-
-
-
 
