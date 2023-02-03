@@ -214,7 +214,7 @@ class Quizz{
         questions
     )
     {
-        this.questions=shuffle(questions);
+        //this.questions=shuffle(questions);
         for(let i=0;i<this.questions.length;i++){
             this.questions[i]=new Question(i,this.questions[i].content,this.questions[i].type,this.questions[i].answers,this.questions[i].comment)
         };
