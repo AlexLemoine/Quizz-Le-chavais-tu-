@@ -1,0 +1,54 @@
+body {
+  margin: 0;
+}
+
+header {
+  padding: 5px;
+  text-align: center;
+}
+
+header img {
+  -o-object-fit: cover;
+     object-fit: cover;
+  min-width: 400px;
+  max-width: 950px;
+  height: 150px;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+label.right {
+  color: rgb(37, 195, 37);
+  font-weight: bold;
+}
+
+label.wrong {
+  color: red;
+  font-weight: bold;
+}
+
+div.answers {
+  display: block;
+  width: 350px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+div.answers figure {
+  min-width: 220px;
+}
+
+div.answers img {
+  width: 30%;
+  padding: 5px;
+}
+
+fieldset.radioImg div.answers label {
+  padding: 10px;
+}
+
+#button, #next {
+  margin-left: 20px;
+}/*# sourceMappingURL=styles.css.map */
