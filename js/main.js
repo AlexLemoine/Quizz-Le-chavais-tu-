@@ -1,14 +1,13 @@
 // *****************************
 // ********* FONCTIONS *********
-// *****************************
+
 
 // Trier les réponses dans un ordre aléatoire :
-
 function shuffle(array)
 {
     // Créer une copie du tableau array pour ne pas perdre l'ordre du tableau d'origine après l'affichage en aléatoire
     let arrayCopy = [];
-    for (i = 0; i < array.length; i++) {
+    for (i = 0; i < arrayCopy.length; i++) {
     arrayCopy[i] = array[i];
     }
 
@@ -24,61 +23,85 @@ function shuffle(array)
 
 
 
-
-
-
-// Fonction check: 
 // Récupérer "label" de l'élément sélectionné et le ranger dans un tableau
-
-
-function check(event)
+function checkAnswer(event)
 {
-    
     // Vérifier si l'élément actuel est sélectionné en utilisant l'attribut "checked"
     // Parcourir les réponses sélectionnées par l'utilisateur
     
-    for(let i=0;i<questions.length;i++){
-        let answerChecked=document.querySelector("#question-"+i+" input:checked");
 
-        // Si data-rightanswer=0 => ajout classe "wrong"
+    let answerChecked=document.querySelector("#question-"+currentIndex+" input:checked");
 
-        let falseAnswer=document.querySelector("#question-"+i+" input:checked + label");
+    // Si data-rightanswer=0 => ajout classe "wrong"
 
-        if(answerChecked.dataset.rightanswer=="0"){
-            falseAnswer.classList.add('wrong');
-        };
+    let falseAnswer=document.querySelector("#question-"+currentIndex+" input:checked + label");
+
+    if(answerChecked.dataset.rightanswer=="0"){
+        falseAnswer.classList.add('wrong');
     };
-
 
     // Checker chaque réponse qui a un attribut data-rightanswer=1 
     // Ajouter au label qui suit la classe "right"
 
-    let rightAnswer=document.querySelectorAll('input[data-rightanswer="1"] + label');
+    let rightAnswer=document.querySelector('#question-'+currentIndex+' input[data-rightanswer="1"] + label');
+    rightAnswer.classList.add('right');
 
-    for(let i=0;i<rightAnswer.length;i++){
-        rightAnswer[i].classList.add('right');
-    }; 
+    // On affiche le commentaire qui était masqué
+    p = document.querySelector('#comment-'+currentIndex);
+    showElt(p); // RENOMMER EN COMMENT
 
-
-    // Supprimer la classe "hidden" des comment pour les afficher    
-    let p=document.querySelectorAll('p.hidden');
-    for(let i=0;i<p.length;i++){
-        p[i].classList.remove("hidden");
+    // On affiche le bouton suivant qui était masqué
+    if(currentIndex<questions.length-1)
+    {
+        // Dernier affichage sur avant-dernière question
+        showElt(next);
+    } else {
+        form.innerHTML += 'Merci d\'avoir joué !';
     };
+
 
 };
 
+
+// Supprimer la classe "hidden"
+function showElt(elt)
+{
+    console.log(elt);
+    elt.classList.remove("hidden");
+};
+
+// Ajouter classe hidden
+function hideElt(elt)
+{
+    console.log(elt);
+    elt.classList.add("hidden");
+};
+
+
+// Ajouter +1
+function nextQuestion()
+{
+    currentIndex++;
+    form.innerHTML = '';
+    refresh();
+    hideElt(next);
+};
+
+
+// Afficher la question courante
+function refresh()
+{
+    html = questions[currentIndex].toHTML();
+    form.innerHTML = html;
+};
 
 
 
 // *****************************
 // ********* VARIABLES *********
-// *****************************
 
-// DE QUOI AI-JE BESOIN ?
 
-// Des questions + des réponses :
-
+// Tableau de questions + réponses :
 let questions = [
     {
         content: "Pourquoi les chats miaulent-ils?",
@@ -146,9 +169,9 @@ let questions = [
     }
 ];
 
-// Créer une classe Question :
-// Créer le code HTML de chaque question
 
+// Créer une classe Question :
+// Créer le code HTML de la question
 class Question{
     constructor(
         indice,
@@ -166,9 +189,6 @@ class Question{
 
     toHTML()
     {   
-        
-        // Afficher les réponses de manière aléatoire
-        let answersCopy=shuffle(this.answers);
         let html =
             `<fieldset class="questions ${this.type}" id="question-${this.indice}">
             <legend class="legend">${this.content}</legend>
@@ -176,69 +196,66 @@ class Question{
 
         let uniqId=Date.now()+Math.floor(Math.random()*1000);
 
-        for(let indiceAnswers=0; indiceAnswers<answersCopy.length;indiceAnswers++){
+        // pour chaque réponse
+        for(let indiceAnswers=0 ; indiceAnswers<this.answers.length ; indiceAnswers++)
+        {
             if(this.type=="radio"){
+                // S'il s'agit d'un bouton radio à ajouter
                 html+=
                     `<div class="answers">
-                        <input type="radio" name="answer${uniqId}" class="answer" data-rightAnswer="${answersCopy[indiceAnswers].rightAnswer}"> 
-                        <label for="answer">${answersCopy[indiceAnswers].label}</label>
+                        <input type="radio" name="answer${uniqId}" class="answer" data-rightAnswer="${this.answers[indiceAnswers].rightAnswer}"> 
+                        <label for="answer">${this.answers[indiceAnswers].label}</label>
                     </div>`;
             }else if(this.type=="radioImg"){
+                // S'il s'agit d'une image à afficher en guise de réponse
                 html+=
                     `<div class="answers">
-                        <input type="radio" name="answer${uniqId}" class="answer" data-rightAnswer="${answersCopy[indiceAnswers].rightAnswer}"> 
+                        <input type="radio" name="answer${uniqId}" class="answer" data-rightAnswer="${this.answers[indiceAnswers].rightAnswer}"> 
                         <label for="answer">
                             <figure>
-                                <img src="img/${answersCopy[indiceAnswers].img}" alt="${answersCopy[indiceAnswers].label}">
-                                <figcaption>${answersCopy[indiceAnswers].label}</figcaption>
+                                <img src="img/${this.answers[indiceAnswers].img}" alt="${this.answers[indiceAnswers].label}">
+                                <figcaption>${this.answers[indiceAnswers].label}</figcaption>
                             </figure>
                         </label>
                     </div>`;
             };
         };
+        // Ajout du commentaire avec classe hidden pour le masquer lors de l'affichage
+        // il sera démasqué par la suite à un moment préçis
         html+=
-            `<p class="hidden"><i class="fa-solid fa-cat"></i> ${this.comment}</p>
+            `<p class="hidden" id="comment-${this.indice}"><i class="fa-solid fa-cat"></i> ${this.comment}</p>
             </fieldset>`;
         return html;
     }
-        
-};
-
-
-// Créer une classe Quizz
-// Afficher les questions une par une
-
-
-class Quizz{
-    constructor(
-        questions
-    )
-    {
-        //this.questions=shuffle(questions);
-        for(let i=0;i<this.questions.length;i++){
-            this.questions[i]=new Question(i,this.questions[i].content,this.questions[i].type,this.questions[i].answers,this.questions[i].comment)
-        };
-
-        const form=document.querySelector("#form");
-        for(let i=0;i<this.questions.length;i++)
-        {
-            form.innerHTML+=this.questions[i].toHTML();
-        };
-
-
-        // Placer un écouteur sur le bouton "submit"
-
-        let submit=document.querySelector('#button');
-        submit.addEventListener('click',check);
-    }; 
 };
 
 
 
 // **********************************
 // ********* CODE PRINCIPAL *********
-// **********************************
+
+let currentIndex = 0;
+const form=document.querySelector("#form");
+let p = document.querySelector('p.hidden');
+let next = document.querySelector("#next");
+let submit=document.querySelector('#button');
+
+// Lors du clic sur le bouton next, on affiche la question+1
+next.addEventListener('click',nextQuestion);
 
 
-const quizz=new Quizz(questions);
+// 2. On lance la 1ère question
+for(let i=0;i<questions.length;i++){
 
+    // 1. Mélanger et afficher les réponses de manière aléatoire
+    let answersCopy=shuffle(questions[i].answers);
+
+    // On affiche le html de la question[0]
+    questions[i]=new Question(i,questions[i].content,questions[i].type,questions[i].answers,questions[i].comment);
+    refresh();
+
+    // Placer un écouteur sur le bouton "submit"
+    // On checke les réponses
+    submit.addEventListener('click',checkAnswer);
+
+};
